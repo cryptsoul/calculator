@@ -1,86 +1,73 @@
-// first try for calculator
+// less memory usage, faster and I tried using Function prototype 
 
 #include <iostream>
 #include <limits>
 
-using namespace std;
+//Function prototype 
+double Action(double Result, double number, char Operation);
+void Error();
 
-double Deist(double a, char b, double c)
-{
-    double d;
-    switch (b)
-    {
-    case '+':
-        d = a + c;
-        return d;
-    case '-':
-        d = a - c;
-        return d;
-    case '*':
-        d = a * c;
-        return d;
-    case '/':
-        d = a / c;
-        return d;
-    }
-}
-
-int main()
-{
-    double Sum1, Sum2, Result, A;
+int main(){
+    
+    double number, Result=0;
     char Operation;
-    short int n = 3;
-
-    cout << "Vuvedi 1va stoinost: ";
-
-    while (!(cin >> Sum1))
-    {
-        cout << "Vuvedi chislo za 1va stoinost ";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    do
-    {
-        cout << "Vuvedi deistvie (+, -, *, /): ";
-        cin >> Operation;
-    } while (Operation != '+' && Operation != '-' && Operation != '*' && Operation != '/');
-
-    cout << "Vuvedi 2ra stoinost: ";
-
-    while (!(cin >> Sum2))
-    {
-        cout << "vuvedi chislo za 2ra stoinost ";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    Result = Deist(Sum1, Operation, Sum2);
-    A = Result;
-
-    do
-    {
-        cout << "Vuvedi deistvie (+, -, *, /, =): ";
-        cin >> Operation;
-        if (Operation == '+' || Operation == '-' || Operation == '*' || Operation == '/' || Operation == '=')
-        {
-            if (Operation != '=')
-            {
-                cout << "Vuvedi " << n << "ta stoinsot: ";
-
-                while (!(cin >> Sum2))
-                {
-                    cout << " vuvedi chislo za " << n << "ta stoinost: ";
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                }
-                n++;
-                Result = Deist(0, Operation, Sum2);
-                A = A + Result;
-            }
+    bool FirstTime=true;
+ 
+    do{
+        
+        std::cout << "input number number: ";
+        while (!(std::cin >> number)){
+            Error();
+            std::cout << "Invalid input. Please input a number: ";
         }
-    } while (Operation != '=');
-    cout << "Rezultat: " << A;
+        
+        if (FirstTime){
+            Result=number;
+            FirstTime=false;
+        } else {
+            Result= Action( number, Result, Operation);
+        }
 
+        do{
+            std::cout << "input action (+, -, *, /, =): ";
+            std::cin >> Operation;
+        }while (Operation!='+' && Operation!='-' && Operation!='*' && Operation!='/' && Operation!='=');
+       
+        if (Operation=='='){
+            break;
+        }
+
+    } while (Operation!='=');
+   
+    std::cout <<"result: " << Result;
+    
     return 0;
 }
+
+//Function declaration 
+void Error(){
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+};
+
+double  Action (double Result, double number, char Operation){
+    switch (Operation){
+            case '+':
+                Result+=number;
+                break;
+            case '-':
+                Result-=number;
+                break;
+            case '*':
+                Result*=number;
+                break;
+            case '/':
+                    while (number==0){
+                         std::cout << "Division by zero is not allowed. Input a number different from 0: ";
+                        std::cin >> number;
+                    }
+                Result/=number;
+                break;
+    }
+    return Result;
+};
